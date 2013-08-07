@@ -1,32 +1,24 @@
 <?php
 namespace NamespacedPlugin;
-
 include('config/config.php');
-include('config/parameters.php');
 
-class Autoloader{
+spl_autoload_register(__NAMESPACE__.'\\loader');
 
-	public $config;
+function loader($cls){
+	$cls = ltrim($cls, '\\');
+    if(strpos($cls, __NAMESPACE__) !== 0)
+        return;
 
-	public function __construct(){
-		$this->config = new config\Config();
-		$this->loader($this->config->getParam('bootstrap'));
-		$this->loader($this->config->getParam('classes'));
-	}
+    $cls = str_replace(__NAMESPACE__, '', $cls);
 
-	public function loader($classArray){
-		
-		if(!is_array($classArray)){
-			throw new \InvalidArgumentException('$classArray must be of type array() "'.gettype($classArray).'" given.');
-		}
-		foreach($classArray as $class){
+    $path = PLUGIN_PATH_PATH . 
+        str_replace('\\', DIRECTORY_SEPARATOR, $cls) . '.php';
 
-			$file =  ABSPATH . 'wp-content/plugins/'.str_replace('\\','/',$class).'.php';
-			if(!file_exists($file)){
-				throw new \InvalidArgumentException('Tried to include file "' . $file . '" However it does not exist!');
-			}
-			
-			require_once($file);
-		}
-	}
+    require_once($path);
 }
+
+$loader = array( new Bootstrap\Bootstrap(),
+				 new Controller\Controller(),
+				 new Model\Model(),
+				 new Assets\Assets(),
+				 new lib\Lib());

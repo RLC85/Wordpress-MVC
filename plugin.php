@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * Plugin Name: Wordpress Namespace MVC
  * Plugin URI: 
@@ -12,17 +10,13 @@
  * Class Plugin
  */
 namespace NamespacedPlugin;
+include ('autoloader.php');
 
- include ('autoloader.php');
 
-use NamespacedPlugin\Controller\MainController;
+/*
+ *Plugin Entry Point
+ */
 
- class Plugin{
-
- 	public function __construct(){
- 		$autoloader = new Autoloader();
- 		add_action('admin_menu',array('NamespacedPlugin\Controller\AdminMenuController','addGenericMenu'));
- 	}
- }
-
- $plugin = new Plugin();
+class Plugin{
+	
+}
